@@ -89,8 +89,8 @@ export const Navbar = () => {
     ];
 
     return (
-        <nav className="bg-[#2C3E50] shadow-lg font-sans sticky top-0 z-100">
-            <div className="mx-auto pb-1 sm:px-6 lg:px-8">
+        <nav className="bg-[#0F172A] font-sans sticky top-0 z-100 h-16">
+            <div className="mx-auto pb-1 sm:px-6 lg:px-8 items-center">
                 <div className="px-8 flex items-center justify-between h-15">
 
                     {/* Left section: Logo and Brand Name */}
@@ -115,17 +115,17 @@ export const Navbar = () => {
 
                     {/* Center section: Navigation Links for Desktop */}
                     <div className="ml-10 flex items-baseline space-x-6 flex-row">
-                        <div className="hidden md:block">
+                        <button className="hidden md:block">
                             {navLinks.map((link, index) => (
                                 <Link
                                     key={link.text}
                                     href={link.href}
-                                    className="px-3 py-2 rounded-md font-medium"
+                                    className="p-3 rounded-2xl font-medium hover:px-4 transition-all duration-100 hover:bg-[#f39d12]"
                                 >
                                     {link.text} 
                                 </Link>
                             ))}
-                        </div>
+                        </button>
 
 
                         {/* Right section: Auth area for Desktop */}
