@@ -8,7 +8,8 @@ const mentors = [
     title: 'Cardiologist, SKIMS Srinagar',
     bio: 'Raised in Baramulla, Dr. Khan pursued medicine and now mentors students aspiring for NEET and medical careers.',
     avatar: 'https://i.pravatar.cc/600?img=47',
-    email: 'ayesha.khan@example.com'
+    email: 'ayesha.khan@example.com',
+    rating: 4.9
   },
   {
     id: 2,
@@ -16,7 +17,8 @@ const mentors = [
     title: 'Professor of Computer Science, JU',
     bio: 'From Jammu, Prof. Sharma is passionate about guiding students in software engineering and research careers.',
     avatar: 'https://i.pravatar.cc/600?img=12',
-    email: 'rahul.sharma@example.com'
+    email: 'rahul.sharma@example.com',
+    rating: 4.8
   },
   {
     id: 3,
@@ -24,7 +26,8 @@ const mentors = [
     title: 'Indian Administrative Service',
     bio: 'Hailing from Anantnag, Meera mentors UPSC aspirants with a focus on strategy, consistency, and well-being.',
     avatar: 'https://i.pravatar.cc/600?img=5',
-    email: 'meera.qadri@example.com'
+    email: 'meera.qadri@example.com',
+    rating: 4.9
   },
   {
     id: 4,
@@ -32,7 +35,8 @@ const mentors = [
     title: 'Structural Engineer, Srinagar',
     bio: 'An NIT Srinagar alumnus, Adil helps students with GATE prep, core engineering careers, and portfolios.',
     avatar: 'https://i.pravatar.cc/600?img=33',
-    email: 'adil.mir@example.com'
+    email: 'adil.mir@example.com',
+    rating: 4.7
   },
   {
     id: 5,
@@ -40,7 +44,8 @@ const mentors = [
     title: 'Psychologist, Jammu',
     bio: 'Guides students on stress management, exam preparation mindset, and holistic growth.',
     avatar: 'https://i.pravatar.cc/600?img=52',
-    email: 'kiran.gupta@example.com'
+    email: 'kiran.gupta@example.com',
+    rating: 4.8
   },
   {
     id: 6,
@@ -48,7 +53,8 @@ const mentors = [
     title: 'Architect, Srinagar',
     bio: 'Mentors design portfolios, NATA/JEE B.Arch prep, and studio readiness.',
     avatar: 'https://i.pravatar.cc/600?img=15',
-    email: 'sana.wani@example.com'
+    email: 'sana.wani@example.com',
+    rating: 4.6
   },
   {
     id: 7,
@@ -56,7 +62,8 @@ const mentors = [
     title: 'Indian Army (Retd.)',
     bio: 'Advises on SSB preparation, discipline building, and defense careers.',
     avatar: 'https://i.pravatar.cc/600?img=67',
-    email: 'vivek.singh@example.com'
+    email: 'vivek.singh@example.com',
+    rating: 4.8
   },
   {
     id: 8,
@@ -64,31 +71,39 @@ const mentors = [
     title: 'Chartered Accountant, Jammu',
     bio: 'Helps with CA Foundation/Inter strategy and finance careers.',
     avatar: 'https://i.pravatar.cc/600?img=25',
-    email: 'nida.bashir@example.com'
+    email: 'nida.bashir@example.com',
+    rating: 4.9
   }
 ]
 
 const MentorCard = ({ mentor }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition transform hover:-translate-y-1">
-      <div className="relative w-full h-56">
-        <Image
-          src={mentor.avatar}
-          alt={mentor.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+    <div className="relative rounded-3xl overflow-hidden bg-slate-800/70 backdrop-blur-sm shadow-xl transition transform hover:-translate-y-1 hover:shadow-2xl">
+      <div className="absolute right-3 top-3">
+        <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-[#F39C12] text-white shadow">
+          {mentor.rating.toFixed(1)}+
+        </span>
       </div>
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900">{mentor.name}</h3>
-        <p className="text-[#F39C12] font-semibold mt-0.5 text-sm">{mentor.title}</p>
-        <p className="text-gray-600 mt-3 leading-relaxed text-sm h-20">{mentor.bio}</p>
-        <div className="mt-5 flex flex-col relative items-center justify-between gap-3">
-          <a href={`mailto:${mentor.email}`} className="text-xs text-gray-500 hover:text-gray-700 underline underline-offset-2">
+      <div className="flex flex-col items-center pt-8 px-5 pb-5">
+        <div className="relative w-28 h-28 -mt-2">
+          <Image
+            src={mentor.avatar}
+            alt={mentor.name}
+            fill
+            className="rounded-full object-cover ring-4 ring-[#F39C12]/60"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+        <h3 className="mt-4 text-lg font-extrabold text-white text-center">{mentor.name}</h3>
+        <p className="text-sm text-[#F39C12] font-semibold text-center">{mentor.title}</p>
+        <p className="text-slate-300 mt-3 leading-relaxed text-sm min-h-16 text-center">{mentor.bio}</p>
+        <div className="mt-5 w-full flex flex-col items-center gap-3">
+          <a href={`mailto:${mentor.email}`} className="text-xs text-slate-300 hover:text-white underline underline-offset-4">
             {mentor.email}
           </a>
-          <button className='text-sm bg-[#F39C12] text-white rounded-xl p-2 font-semibold hover:cursor-pointer'>Schedule a Meeting</button>
+          <button className="text-sm bg-[#F39C12] hover:bg-[#d7890f] text-white rounded-xl px-4 py-2 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F39C12]/70 focus:ring-offset-slate-900">
+            Schedule a Meeting
+          </button>
         </div>
       </div>
     </div>
@@ -97,16 +112,18 @@ const MentorCard = ({ mentor }) => {
 
 const page = () => {
   return (
-    <section className="px-6 py-10 md:py-14 bg-gray-200">
-      <div className="max-w-6xl mx-auto">
-        <header className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-black">Mentorships</h1>
-          <p className="text-[#F39C12] mt-3 max-w-2xl mx-auto">
-            Meet mentors from Jammu & Kashmir who excelled in their fields and now give back to the community.
+    <section className="px-6 py-12 md:py-16 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+      <div className="max-w-7xl mx-auto">
+        <header className="text-center mb-12 md:mb-14">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            Connect with Expert Mentors
+          </h1>
+          <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
+            Get personalized guidance from experienced professionals across various fields. Book one-on-one sessions to accelerate your career journey.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
           {mentors.map((m) => (
             <MentorCard key={m.id} mentor={m} />
           ))}

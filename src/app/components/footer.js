@@ -2,9 +2,10 @@
 "use client"
 import React from 'react'
 import Image from 'next/image';
+import Link from 'next/link';
 const footer = () => {
   return (
-<footer className="bg-[var(--primary-color)] border-t border-[var(--neutral-bg)] text-white w-full">
+    <footer className="bg-[#0F172A] text-white">
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo and description */}
         <div>
@@ -13,8 +14,8 @@ const footer = () => {
             alt="LOGO"
             width={40}
             height={40}
-            priority 
-            className='m-1'/>
+            priority
+            className='m-1' />
           <div className="leading-relaxed flex flex-col">
             <h1 className='text-2xl'>Evolvia</h1>
             <h1 className='text-sm'>Navigate | Learn | Achieve</h1>
@@ -58,15 +59,19 @@ const footer = () => {
             {/* Add other social icons similarly */}
           </div>
         </div>
+        <div className="bg-[#0F172A] py-4 ml-120 text-sm text-white w-full flex items-center justify-center whitespace-nowrap gap-2">
+          <span>© {new Date().getFullYear()} Evolvia</span>
+          <span className="mx-1">|</span>
+          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
+          <span className="mx-1">|</span>
+          <Link href="/terms" className="hover:underline">Terms of Use</Link>
+          <span className="mx-1">|</span>
+          <Link href="/accessibility" className="hover:underline">Accessibility</Link>
+        </div>
       </div>
 
       {/* Bottom bar */}
-      <div className="bg-[var(--primary-color)] py-4 text-center text-sm text-white">
-        © {new Date().getFullYear()} Evolvia
-        |<a href="/privacy" className="hover:underline">Privacy Policy</a>
-        | <a href="/terms" className="hover:underline">Terms of Use</a>
-        | <a href="/accessibility" className="hover:underline">Accessibility</a>
-      </div>
+
     </footer>
   );
 }
