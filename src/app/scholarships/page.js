@@ -27,7 +27,7 @@ const ScholarshipsPage = () => {
 
   useEffect(() => {
     // Simulate loading
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
