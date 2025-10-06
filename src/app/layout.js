@@ -50,6 +50,7 @@ export default function RootLayout({ children }) {
         <PageTransition>
           <Navbar />
           {children}
+          <Analytics />
           <Footer />
         </PageTransition>
       </body>
