@@ -16,9 +16,13 @@ export async function connectToDatabase() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URL, { dbName: "SIH" })
-      .then((mongooseInstance) => mongooseInstance);
+    try {
+      cached.promise = mongoose.connect(MONGODB_URL, { dbName: MONGODB_DB })
+        .then((mongooseInstance) => mongooseInstance);
+    } catch (err) {
+      console.error('MongoDB connection error:', err);
+      throw new Error('Failed to connect to MongoDB');
+    }
   }
 
   cached.conn = await cached.promise;
