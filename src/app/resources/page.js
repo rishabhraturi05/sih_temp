@@ -1,12 +1,34 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faVideo, faFilePdf, faChevronDown, faChevronUp, faDownload, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faVideo, faChevronDown, faChevronUp, faPlay, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const ResourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState({});
+  const [cloudinaryVideos, setCloudinaryVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  // Fetch videos from Cloudinary via API route (Search API)
+  useEffect(() => {
+    const fetchCloudinaryVideos = async () => {
+      try {
+        const res = await fetch("/api/cloudinary-videos");
+        if (!res.ok) {
+          console.error("Failed to load Cloudinary videos");
+          return;
+        }
+        const data = await res.json();
+        setCloudinaryVideos(data.videos || []);
+      } catch (error) {
+        console.error("Error loading Cloudinary videos:", error);
+      }
+    };
+
+    fetchCloudinaryVideos();
+  }, []);
 
   const toggleCategory = (categoryKey) => {
     setExpandedCategories(prev => ({
@@ -15,145 +37,35 @@ const ResourcesPage = () => {
     }));
   };
 
+  // Resources data - all videos are fetched dynamically from Cloudinary API
   const resourcesData = {
-    "class11": {
-      title: "Class 11th",
-      icon: "📚",
-      subCategories: {
-        "physics": {
-          name: "Physics",
-          resources: [
-            { type: "video", title: "Mechanics Fundamentals", url: "#", description: "Complete video series on mechanics" },
-            { type: "pdf", title: "Physics Formula Sheet", url: "#", description: "Comprehensive formula reference" },
-            { type: "video", title: "Thermodynamics Explained", url: "#", description: "In-depth thermodynamics concepts" },
-            { type: "pdf", title: "Physics Sample Papers", url: "#", description: "Previous year question papers" },
-          ]
-        },
-        "chemistry": {
-          name: "Chemistry",
-          resources: [
-            { type: "video", title: "Organic Chemistry Basics", url: "#", description: "Introduction to organic compounds" },
-            { type: "pdf", title: "Periodic Table Guide", url: "#", description: "Complete periodic table reference" },
-            { type: "video", title: "Chemical Bonding", url: "#", description: "Understanding chemical bonds" },
-            { type: "pdf", title: "Chemistry Lab Manual", url: "#", description: "Practical experiments guide" },
-          ]
-        },
-        "mathematics": {
-          name: "Mathematics",
-          resources: [
-            { type: "video", title: "Calculus Fundamentals", url: "#", description: "Introduction to calculus" },
-            { type: "pdf", title: "Math Formula Book", url: "#", description: "All important formulas" },
-            { type: "video", title: "Algebra Masterclass", url: "#", description: "Complete algebra course" },
-            { type: "pdf", title: "Math Practice Problems", url: "#", description: "Solved examples and exercises" },
-          ]
-        },
-        "biology": {
-          name: "Biology",
-          resources: [
-            { type: "video", title: "Cell Biology", url: "#", description: "Understanding cell structure" },
-            { type: "pdf", title: "Biology Diagrams", url: "#", description: "Important diagrams collection" },
-            { type: "video", title: "Genetics Explained", url: "#", description: "Complete genetics course" },
-            { type: "pdf", title: "Biology Notes", url: "#", description: "Comprehensive study notes" },
-          ]
-        }
-      }
-    },
-    "class12": {
-      title: "Class 12th",
-      icon: "🎓",
-      subCategories: {
-        "physics": {
-          name: "Physics",
-          resources: [
-            { type: "video", title: "Electromagnetism", url: "#", description: "Complete electromagnetism course" },
-            { type: "pdf", title: "Physics Revision Notes", url: "#", description: "Quick revision material" },
-            { type: "video", title: "Optics and Waves", url: "#", description: "Wave optics explained" },
-            { type: "pdf", title: "JEE Physics Preparation", url: "#", description: "JEE level physics problems" },
-          ]
-        },
-        "chemistry": {
-          name: "Chemistry",
-          resources: [
-            { type: "video", title: "Organic Reactions", url: "#", description: "Complete reaction mechanisms" },
-            { type: "pdf", title: "Chemistry Revision Guide", url: "#", description: "Quick revision notes" },
-            { type: "video", title: "Inorganic Chemistry", url: "#", description: "Inorganic compounds and reactions" },
-            { type: "pdf", title: "NEET Chemistry Notes", url: "#", description: "NEET preparation material" },
-          ]
-        },
-        "mathematics": {
-          name: "Mathematics",
-          resources: [
-            { type: "video", title: "Advanced Calculus", url: "#", description: "Differential and integral calculus" },
-            { type: "pdf", title: "Math JEE Preparation", url: "#", description: "JEE level mathematics" },
-            { type: "video", title: "Probability & Statistics", url: "#", description: "Complete statistics course" },
-            { type: "pdf", title: "Math Previous Papers", url: "#", description: "Board exam papers" },
-          ]
-        },
-        "biology": {
-          name: "Biology",
-          resources: [
-            { type: "video", title: "Human Physiology", url: "#", description: "Complete human body systems" },
-            { type: "pdf", title: "Biology NEET Notes", url: "#", description: "NEET preparation material" },
-            { type: "video", title: "Ecology and Environment", url: "#", description: "Environmental biology" },
-            { type: "pdf", title: "Biology Diagrams PDF", url: "#", description: "Important diagrams for exams" },
-          ]
-        }
-      }
-    },
     "engineering": {
       title: "Engineering",
       icon: "⚙️",
       subCategories: {
         "computer-science": {
           name: "Computer Science",
-          resources: [
-            { type: "video", title: "Data Structures & Algorithms", url: "#", description: "Complete DSA course" },
-            { type: "pdf", title: "Programming Fundamentals", url: "#", description: "C/C++ programming guide" },
-            { type: "video", title: "Database Management", url: "#", description: "SQL and database design" },
-            { type: "pdf", title: "Software Engineering Notes", url: "#", description: "SE principles and practices" },
-          ]
-        },
-        "mechanical": {
-          name: "Mechanical Engineering",
-          resources: [
-            { type: "video", title: "Thermodynamics", url: "#", description: "Engineering thermodynamics" },
-            { type: "pdf", title: "Machine Design", url: "#", description: "Design principles and calculations" },
-            { type: "video", title: "Fluid Mechanics", url: "#", description: "Complete fluid mechanics course" },
-            { type: "pdf", title: "CAD/CAM Notes", url: "#", description: "Computer-aided design guide" },
-          ]
-        },
-        "electrical": {
-          name: "Electrical Engineering",
-          resources: [
-            { type: "video", title: "Circuit Analysis", url: "#", description: "AC/DC circuit fundamentals" },
-            { type: "pdf", title: "Power Systems", url: "#", description: "Power generation and distribution" },
-            { type: "video", title: "Digital Electronics", url: "#", description: "Logic gates and circuits" },
-            { type: "pdf", title: "Control Systems", url: "#", description: "Control theory and applications" },
-          ]
-        },
-        "civil": {
-          name: "Civil Engineering",
-          resources: [
-            { type: "video", title: "Structural Analysis", url: "#", description: "Building structure design" },
-            { type: "pdf", title: "Concrete Technology", url: "#", description: "Concrete mix design" },
-            { type: "video", title: "Surveying", url: "#", description: "Land surveying techniques" },
-            { type: "pdf", title: "Construction Management", url: "#", description: "Project management guide" },
-          ]
+          resources: cloudinaryVideos.map(video => ({
+            type: "video",
+            title: video.public_id.split('/').pop().replace(/_/g, ' ').replace(/\.[^/.]+$/, '') || video.public_id,
+            url: video.secure_url,
+            description: video.folder ? `From folder: ${video.folder}` : "Video lecture from Cloudinary"
+          }))
         }
       }
     }
   };
 
   const handleResourceClick = (resource) => {
-    // Handle resource click - can be extended to open modal, download, etc.
-    console.log("Opening resource:", resource);
-    if (resource.type === "video") {
-      // Open video player or redirect
-      window.open(resource.url, '_blank');
-    } else {
-      // Download PDF or open in new tab
-      window.open(resource.url, '_blank');
+    if (resource.type === "video" && resource.url && resource.url !== "#") {
+      setSelectedVideo(resource);
+      setIsVideoModalOpen(true);
     }
+  };
+
+  const closeVideoModal = () => {
+    setIsVideoModalOpen(false);
+    setSelectedVideo(null);
   };
 
   return (
@@ -165,7 +77,7 @@ const ResourcesPage = () => {
             Study Resources Databank
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Access comprehensive study materials including videos and PDFs for Class 11th, Class 12th, and Engineering courses
+            Access comprehensive video study materials for Engineering courses
           </p>
         </div>
       </div>
@@ -173,15 +85,14 @@ const ResourcesPage = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Category Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="flex justify-center mb-12">
           {Object.entries(resourcesData).map(([key, category]) => (
             <div
               key={key}
-              className={`bg-[#1e293b] rounded-lg p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 ${
-                selectedCategory === key
-                  ? 'border-[#F39C12] shadow-lg'
-                  : 'border-transparent hover:border-[#F39C12]'
-              }`}
+              className={`bg-[#1e293b] rounded-lg p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 w-full max-w-md ${selectedCategory === key
+                ? 'border-[#F39C12] shadow-lg'
+                : 'border-transparent hover:border-[#F39C12]'
+                }`}
               onClick={() => {
                 setSelectedCategory(selectedCategory === key ? null : key);
                 setSelectedSubCategory(null);
@@ -250,13 +161,9 @@ const ResourcesPage = () => {
                             onClick={() => handleResourceClick(resource)}
                           >
                             <div className="flex items-start gap-4">
-                              <div className={`p-3 rounded-lg ${
-                                resource.type === 'video' 
-                                  ? 'bg-red-500/20 text-red-400' 
-                                  : 'bg-blue-500/20 text-blue-400'
-                              }`}>
+                              <div className="p-3 rounded-lg bg-red-500/20 text-red-400">
                                 <FontAwesomeIcon
-                                  icon={resource.type === 'video' ? faVideo : faFilePdf}
+                                  icon={faVideo}
                                   className="text-xl"
                                 />
                               </div>
@@ -268,17 +175,8 @@ const ResourcesPage = () => {
                                   {resource.description}
                                 </p>
                                 <div className="flex items-center gap-2 text-sm">
-                                  {resource.type === 'video' ? (
-                                    <>
-                                      <FontAwesomeIcon icon={faPlay} className="text-[#F39C12]" />
-                                      <span className="text-[#F39C12]">Watch Video</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <FontAwesomeIcon icon={faDownload} className="text-[#F39C12]" />
-                                      <span className="text-[#F39C12]">Download PDF</span>
-                                    </>
-                                  )}
+                                  <FontAwesomeIcon icon={faPlay} className="text-[#F39C12]" />
+                                  <span className="text-[#F39C12]">Watch Video</span>
                                 </div>
                               </div>
                             </div>
@@ -301,13 +199,69 @@ const ResourcesPage = () => {
               Select a category to view resources
             </h3>
             <p className="text-gray-500">
-              Choose from Class 11th, Class 12th, or Engineering to explore study materials
+              Click on Engineering to explore study materials
             </p>
           </div>
         )}
       </div>
+
+      {/* Video Player Modal */}
+      {isVideoModalOpen && selectedVideo && (
+        <div
+          className="fixed inset-0 z-[1000] flex items-center justify-center px-4 py-8 bg-black/70 backdrop-blur-sm"
+          onClick={closeVideoModal}
+        >
+          <div
+            className="relative w-full max-w-5xl max-h-[90vh] bg-[#020617] rounded-2xl border border-gray-700 overflow-hidden shadow-2xl transform transition-all duration-300 ease-out"
+            style={{ boxShadow: "0 25px 50px -12px rgba(0,0,0,0.8)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button - More Visible */}
+            <button
+              onClick={closeVideoModal}
+              className="absolute top-4 right-4 z-10 bg-[#F39C12] hover:bg-[#e67e22] text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
+              aria-label="Close video player"
+              style={{ minWidth: "44px", minHeight: "44px" }}
+            >
+              <FontAwesomeIcon icon={faTimes} className="text-2xl" />
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700 pr-20">
+              <h3 className="text-lg md:text-xl font-semibold text-white truncate">
+                {selectedVideo.title}
+              </h3>
+            </div>
+
+            {/* Video Player */}
+            <div className="relative w-full bg-black">
+              <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+                <video
+                  className="absolute top-0 left-0 w-full h-full"
+                  controls
+                  controlsList="nodownload"
+                  autoPlay
+                  src={selectedVideo.url}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            {/* Video Description */}
+            {selectedVideo.description && (
+              <div className="px-6 py-4 border-t border-gray-700">
+                <p className="text-gray-300 text-sm">
+                  {selectedVideo.description}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-export default ResourcesPage
+export default ResourcesPage;
+
