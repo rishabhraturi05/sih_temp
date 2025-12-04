@@ -38,7 +38,7 @@ const MentorCard = ({ mentor }) => {
   )
 }
 
-const page = () => {
+const Page = () => {
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,4 +104,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

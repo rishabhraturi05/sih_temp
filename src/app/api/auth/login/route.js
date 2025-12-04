@@ -64,6 +64,8 @@ export async function POST(request) {
 
     // Return account data without password
     const userData = account.toJSON();
+    // Add role to user data
+    userData.role = userRole;
 
     return NextResponse.json(
       {

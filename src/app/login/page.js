@@ -38,8 +38,15 @@ const Login = () => {
                 // Show success message
                 alert(`Welcome back, ${data.user.firstName}!`);
                 
-                // Redirect to home page or dashboard
-                window.location.href = '/';
+                // Redirect based on role
+                const userRole = data.user.role || formData.role;
+                if (userRole === 'student') {
+                    window.location.href = '/Dashboard/Student';
+                } else if (userRole === 'mentor') {
+                    window.location.href = '/Dashboard/Mentor';
+                } else {
+                    window.location.href = '/';
+                }
             } else {
                 // Handle login errors
                 alert(data.message || 'Login failed. Please check your credentials and try again.');
