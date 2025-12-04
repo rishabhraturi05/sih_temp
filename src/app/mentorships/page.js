@@ -4,7 +4,52 @@ import Image from 'next/image'
 import FullPageLoader from '../components/loader'
 
 
-const MentorCard = ({ mentor }) => {
+const MentorCard = ({ mentor, onSchedule }) => {
+  const [isScheduling, setIsScheduling] = useState(false);
+  const [scheduleStatus, setScheduleStatus] = useState(null);
+
+  const handleSchedule = async () => {
+    // Check if user is logged in
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) {
+      alert('Please login to schedule a meeting with a mentor.');
+      return;
+    }
+
+    setIsScheduling(true);
+    setScheduleStatus(null);
+
+    try {
+      const response = await fetch('/api/mentor-applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ mentorId: mentor.id })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setScheduleStatus('success');
+        alert('Meeting scheduled successfully! You can view your applied mentors in your dashboard.');
+        if (onSchedule) {
+          onSchedule(mentor.id);
+        }
+      } else {
+        setScheduleStatus('error');
+        alert(data.message || 'Failed to schedule meeting. Please try again.');
+      }
+    } catch (error) {
+      setScheduleStatus('error');
+      alert('An error occurred. Please try again.');
+      console.error('Error scheduling meeting:', error);
+    } finally {
+      setIsScheduling(false);
+    }
+  };
+
   return (
     <div className="relative rounded-3xl overflow-hidden bg-slate-800/70 backdrop-blur-sm shadow-xl transition transform hover:-translate-y-1 hover:shadow-2xl">
       {/* <div className="absolute right-3 top-3">
@@ -29,8 +74,16 @@ const MentorCard = ({ mentor }) => {
           <a href={`mailto:${mentor.email}`} className="text-xs text-slate-300 hover:text-white underline underline-offset-4">
             {mentor.email}
           </a>
-          <button className="text-sm bg-[#F39C12] hover:bg-[#d7890f] text-white rounded-xl px-4 py-2 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F39C12]/70 focus:ring-offset-slate-900">
-            Schedule a Meeting
+          <button 
+            onClick={handleSchedule}
+            disabled={isScheduling}
+            className={`text-sm ${
+              scheduleStatus === 'success' 
+                ? 'bg-green-600 hover:bg-green-700' 
+                : 'bg-[#F39C12] hover:bg-[#d7890f]'
+            } text-white rounded-xl px-4 py-2 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F39C12]/70 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            {isScheduling ? 'Scheduling...' : scheduleStatus === 'success' ? 'Scheduled ✓' : 'Schedule a Meeting'}
           </button>
         </div>
       </div>
