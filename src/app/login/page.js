@@ -36,7 +36,7 @@ const Login = () => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 
                 // Show success message
-                alert(`Welcome back, ${data.user.firstName}!`);
+                alert(`Welcome back, ${data.user.firstName || data.user.Name}!`);
                 
                 // Redirect based on role
                 const userRole = data.user.role || formData.role;

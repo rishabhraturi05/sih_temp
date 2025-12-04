@@ -139,11 +139,11 @@ export const Navbar = () => {
                                         className="w-10 h-10 rounded-full bg-[#F39C12] text-white font-bold flex items-center justify-center hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F39C12]"
                                         title={user?.firstName ? `Hello, ${user.firstName}` : 'Profile'}
                                     >
-                                        {(user?.Name?.[0] || 'U').toUpperCase()}
+                                        {(user?.role === 'mentor') ? (user?.Name?.[0]).toUpperCase():(user?.firstName?.[0]).toUpperCase()}
                                     </button>
                                     {isDropdownOpen && (
                                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black/5 z-50">
-                                            <div className="px-4 py-2 text-sm text-gray-700 border-b">                                                <Link href={user?.role === 'mentor' ? '/Dashboard/Mentor' : '/Dashboard/Student'}>Hello{user?.Name ? `, ${user.Name}` : ''}                                                </Link></div>
+                                            <div className="px-4 py-2 text-sm text-gray-700 border-b">                                                <Link href={user?.role === 'mentor' ? '/Dashboard/Mentor' : '/Dashboard/Student'}>Hello{user?.Name ? `, ${user.Name}` : `, ${user.firstName}`}                                                </Link></div>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
