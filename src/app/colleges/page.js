@@ -65,14 +65,14 @@ const CollegeTable = () => {
 
   return (
     <motion.div
-      className="flex flex-col w-full text-black"
+      className="flex flex-col w-full min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-[#0F172A] text-white"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
       {/* Header Section */}
-      <div className="w-full bg-gradient-to-r p-6">
-        <h1 className="font-extrabold text-3xl text-gray-800 mb-6 tracking-wide flex justify-center">
+      <div className="w-full bg-gradient-to-r from-slate-800 to-slate-900 p-6">
+        <h1 className="font-extrabold text-3xl md:text-4xl text-white mb-6 tracking-wide flex justify-center">
           Colleges in Jammu & Kashmir
         </h1>
         <div className="flex gap-3 justify-center">
@@ -80,11 +80,11 @@ const CollegeTable = () => {
             type="text"
             onChange={handleChange}
             placeholder="Search colleges..."
-            className="text-black h-12 md:w-1/2 p-3 rounded-xl outline-none border-[1px] shadow-md max-w-3xl"
+            className="text-white bg-slate-800/70 backdrop-blur-sm border border-slate-700 h-12 md:w-1/2 p-3 rounded-xl outline-none shadow-md max-w-3xl placeholder-slate-400 focus:border-[#F39C12]"
           />
           <button
             onClick={toggleCompare}
-            className="px-4 py-2 rounded-xl bg-[#F39C12] text-white font-semibold hover:bg-[#a26605] transition shadow-sm"
+            className="px-4 py-2 rounded-xl bg-[#F39C12] text-white font-semibold hover:bg-[#d7890f] transition shadow-sm"
           >
             Compare
           </button>
@@ -96,17 +96,17 @@ const CollegeTable = () => {
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F39C12]"></div>
-            <span className="ml-3 text-gray-600">Loading colleges...</span>
+            <span className="ml-3 text-slate-300">Loading colleges...</span>
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <div className="text-red-500 text-lg font-semibold mb-2">
+            <div className="text-red-400 text-lg font-semibold mb-2">
               Error loading colleges
             </div>
-            <div className="text-gray-600">{error}</div>
+            <div className="text-slate-300">{error}</div>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg shadow-md">
+          <div className="overflow-x-auto rounded-lg shadow-xl border border-slate-700">
             <table className="w-full border-collapse">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-gray-100 text-gray-700 text-sm uppercase tracking-wide">
@@ -129,7 +129,7 @@ const CollegeTable = () => {
                   filtered.map((college) => (
                     <tr
                       key={college._id}
-                      className="odd:bg-white even:bg-gray-50 hover:bg-amber-50 transition-colors duration-300"
+                      className="odd:bg-slate-800/50 even:bg-slate-800/30 hover:bg-slate-700/50 transition-colors duration-300"
                     >
                       <td className="py-3 px-4 border text-gray-700 font-medium text-center">
                         {college.srNo}
@@ -181,7 +181,7 @@ const CollegeTable = () => {
                               (c) => c.srNo === college.srNo
                             )
                               ? "bg-red-500 hover:bg-red-600"
-                              : "bg-[#F39C12] hover:bg-[#a26605]"
+                              : "bg-[#F39C12] hover:bg-[#d7890f]"
                           }`}
                         >
                           {selectedColleges.find(
@@ -225,13 +225,13 @@ const CollegeTable = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-white p-6 rounded-2xl shadow-xl w-[80%] max-w-3xl"
+              className="bg-slate-800/90 backdrop-blur-lg p-6 rounded-2xl shadow-xl w-[80%] max-w-3xl border border-slate-700"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+              <h2 className="text-2xl font-bold text-white mb-4 text-center">
                 Compare Colleges
               </h2>
               {selectedColleges.length > 0 ? (
@@ -407,7 +407,7 @@ const CollegeTable = () => {
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-600 text-center">
+                <p className="text-slate-300 text-center">
                   No colleges selected for comparison.
                 </p>
               )}

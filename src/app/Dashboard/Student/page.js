@@ -180,7 +180,7 @@ const Page = () => {
   if (error) return <div className="text-red-500 p-6 text-center min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 flex items-center justify-center">{error}</div>;
 
   return (
-    <section className="px-6 py-12 md:py-16 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 min-h-screen">
+    <section className="px-6 py-12 md:py-16 bg-gradient-to-b from-slate-900 via-slate-900 to-[#0F172A] min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         {user && (

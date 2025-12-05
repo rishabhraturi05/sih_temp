@@ -73,10 +73,10 @@ const ResourcesPage = () => {
       {/* Header Section */}
       <div className="bg-gradient-to-r from-[#1e293b] to-[#0F172A] py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#F39C12]">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
             Study Resources Databank
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-white max-w-3xl mx-auto">
             Access comprehensive video study materials for Engineering courses
           </p>
         </div>
@@ -99,10 +99,10 @@ const ResourcesPage = () => {
               }}
             >
               <div className="text-5xl mb-4 text-center">{category.icon}</div>
-              <h2 className="text-2xl font-bold text-center text-[#F39C12] mb-2">
+              <h2 className="text-2xl font-bold text-center text-white mb-2">
                 {category.title}
               </h2>
-              <p className="text-gray-400 text-center text-sm">
+              <p className="text-white text-center text-sm">
                 {Object.keys(category.subCategories).length} subjects available
               </p>
             </div>
@@ -113,7 +113,7 @@ const ResourcesPage = () => {
         {selectedCategory && (
           <div className="mt-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-[#F39C12]">
+              <h2 className="text-3xl font-bold text-white">
                 {resourcesData[selectedCategory].title} - Subjects
               </h2>
               <button
@@ -121,7 +121,7 @@ const ResourcesPage = () => {
                   setSelectedCategory(null);
                   setSelectedSubCategory(null);
                 }}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-white hover:text-[#F39C12] transition-colors"
               >
                 Close
               </button>
@@ -139,15 +139,15 @@ const ResourcesPage = () => {
                     className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#334155] transition-colors"
                   >
                     <div className="flex items-center gap-4">
-                      <FontAwesomeIcon icon={faBook} className="text-[#F39C12] text-xl" />
-                      <h3 className="text-xl font-semibold">{subCategory.name}</h3>
-                      <span className="text-sm text-gray-400">
+                      <FontAwesomeIcon icon={faBook} className="text-white text-xl" />
+                      <h3 className="text-xl font-semibold text-white">{subCategory.name}</h3>
+                      <span className="text-sm text-white">
                         ({subCategory.resources.length} resources)
                       </span>
                     </div>
                     <FontAwesomeIcon
                       icon={expandedCategories[subKey] ? faChevronUp : faChevronDown}
-                      className="text-gray-400"
+                      className="text-white"
                     />
                   </button>
 
@@ -171,12 +171,12 @@ const ResourcesPage = () => {
                                 <h4 className="font-semibold text-white mb-1">
                                   {resource.title}
                                 </h4>
-                                <p className="text-sm text-gray-400 mb-3">
+                                <p className="text-sm text-white mb-3">
                                   {resource.description}
                                 </p>
                                 <div className="flex items-center gap-2 text-sm">
-                                  <FontAwesomeIcon icon={faPlay} className="text-[#F39C12]" />
-                                  <span className="text-[#F39C12]">Watch Video</span>
+                                  <FontAwesomeIcon icon={faPlay} className="text-white" />
+                                  <span className="text-white">Watch Video</span>
                                 </div>
                               </div>
                             </div>
@@ -195,10 +195,10 @@ const ResourcesPage = () => {
         {!selectedCategory && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">📚</div>
-            <h3 className="text-2xl font-semibold text-gray-400 mb-2">
+            <h3 className="text-2xl font-semibold text-white mb-2">
               Select a category to view resources
             </h3>
-            <p className="text-gray-500">
+            <p className="text-white">
               Click on Engineering to explore study materials
             </p>
           </div>
@@ -251,7 +251,7 @@ const ResourcesPage = () => {
             {/* Video Description */}
             {selectedVideo.description && (
               <div className="px-6 py-4 border-t border-gray-700">
-                <p className="text-gray-300 text-sm">
+                <p className="text-white text-sm">
                   {selectedVideo.description}
                 </p>
               </div>

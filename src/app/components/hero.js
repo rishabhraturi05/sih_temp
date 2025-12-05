@@ -87,14 +87,14 @@ const Hero = () => {
     ];
 
     return (<>
-        <section className="relative h-screen w-full flex items-center justify-center hero">
-            <div>
+        <section className="relative h-screen w-full flex items-center justify-center hero mb-0">
+            <div className="absolute inset-0 w-full h-full">
                 <img
                     src="/background1.jpg"
                     alt="A scenic view of mountains and a lake, representing opportunity."
-                    className="absolute inset-0 w-full h-[95%] object-cover -z-10"
+                    className="absolute inset-0 w-full h-full object-cover -z-10"
                 />
-                <div className="absolute inset-0 bg-black opacity-50 z-10 h-[95%] w-full" />
+                <div className="absolute inset-0 bg-black opacity-50 z-10 w-full h-full" />
             </div>
 
             <div className="relative z-10 text-center p-5">
@@ -113,16 +113,16 @@ const Hero = () => {
             </div>
 
         </section>
-        <div className="bg-[#F8F9FA] py-16 sm:py-24">
+        <div className="bg-[#0F172A] sm:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Features Section */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {features.map((feature, index) => (
-                        <div key={index} className="bg-white p-8 rounded-lg border border-gray-200/75 shadow-sm text-center transform hover:-translate-y-1 transition-transform duration-300">
+                        <div key={index} className="bg-slate-800/70 backdrop-blur-sm p-8 rounded-lg border border-slate-700/50 shadow-xl text-center transform hover:-translate-y-1 transition-transform duration-300">
                             {feature.icon}
-                            <h3 className="text-xl font-bold text-[#343A40]">{feature.title}</h3>
-                            <p className="text-gray-500 mt-2 text-sm">{feature.description}</p>
-                            <Link href={feature.href}><button className='text-[#343A40]    font-bold mt-5 p-3 bg-[#eea42e] rounded-full hover:cursor-pointer'>{feature.btn}<i className="px-2 fa-solid fa-arrow-right"></i></button></Link>
+                            <h3 className="text-xl font-bold text-white">{feature.title}</h3>
+                            <p className="text-slate-300 mt-2 text-sm">{feature.description}</p>
+                            <Link href={feature.href}><button className='text-white font-bold mt-5 p-3 bg-[#F39C12] hover:bg-[#d7890f] rounded-full hover:cursor-pointer transition-colors'>{feature.btn}<i className="px-2 fa-solid fa-arrow-right"></i></button></Link>
                         </div>
                     ))}
                 </div>

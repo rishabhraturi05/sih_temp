@@ -130,7 +130,7 @@ const Page = () => {
   if (error) return <div className="text-red-500 p-6 text-center">Error: {error}</div>;
 
   return (
-    <section className="px-6 py-12 md:py-16 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+    <section className="px-6 py-12 md:py-16 bg-gradient-to-b from-slate-900 via-slate-900 to-[#0F172A] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 md:mb-14">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">

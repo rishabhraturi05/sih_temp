@@ -209,7 +209,7 @@ const QuizAI = () => {
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-[#0F172A] py-12 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
