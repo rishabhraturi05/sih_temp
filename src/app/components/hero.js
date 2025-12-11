@@ -64,8 +64,8 @@ const Hero = () => {
         },
         {
             icon: <Colleges />,
-            title: 'Find Nearby Colleges',
-            description: 'Discover and compare colleges and universities in your area that offer the courses you are passionate about.',
+            title: 'Find Colleges in India',
+            description: 'Discover and compare colleges and universities in India that offer the courses you are passionate about.',
             btn: 'Search Colleges',
             href: "/colleges", text: "Colleges" 
 
@@ -100,7 +100,7 @@ const Hero = () => {
             <div className="relative z-10 text-center p-5">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">
                     <p>Unlock Your Future,</p>
-                    <p>Rooted in J&K</p>
+                    <p>Rooted in India</p>
                 </h1>
                 <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
                     Personalized career guidance for the youth of India.
