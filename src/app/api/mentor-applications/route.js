@@ -163,3 +163,72 @@ export async function GET(request) {
   }
 }
 
+// DELETE: Retract a mentor application (only if not scheduled)
+export async function DELETE(request) {
+  try {
+    await connectToDatabase();
+
+    // Verify authentication
+    const decoded = verifyToken(request);
+    if (!decoded || !decoded.userId) {
+      return NextResponse.json(
+        { message: 'Unauthorized. Please login.' },
+        { status: 401 }
+      );
+    }
+
+    const { mentorId } = await request.json();
+
+    if (!mentorId) {
+      return NextResponse.json(
+        { message: 'Mentor ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Find the user's application
+    const application = await MentorApplication.findOne({ userId: decoded.userId });
+
+    if (!application) {
+      return NextResponse.json(
+        { message: 'Application not found' },
+        { status: 404 }
+      );
+    }
+
+    // Find mentor status entry
+    const mentorStatus = application.mentorStatuses?.find(
+      (ms) => ms.mentorId.toString() === mentorId.toString()
+    );
+
+    // If scheduled, block retract
+    if (mentorStatus && (mentorStatus.meetingDate || mentorStatus.meetingTime)) {
+      return NextResponse.json(
+        { message: 'Cannot retract: meeting already scheduled.' },
+        { status: 400 }
+      );
+    }
+
+    // Remove mentorId and status
+    application.mentorIds = application.mentorIds.filter(
+      (id) => id.toString() !== mentorId.toString()
+    );
+    application.mentorStatuses = (application.mentorStatuses || []).filter(
+      (ms) => ms.mentorId.toString() !== mentorId.toString()
+    );
+
+    await application.save();
+
+    return NextResponse.json(
+      { message: 'Application retracted successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error retracting mentor application:', error);
+    return NextResponse.json(
+      { message: 'Failed to retract mentor application', error: error.message },
+      { status: 500 }
+    );
+  }
+}
+

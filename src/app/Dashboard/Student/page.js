@@ -2,8 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import FullPageLoader from '../../components/loader'
+import MeetingRoom from '../../components/MeetingRoom'
 
-const MentorCard = ({ mentor }) => {
+const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60 * 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   const formatDate = (dateString) => {
     if (!dateString) return null;
     try {
@@ -52,6 +60,21 @@ const MentorCard = ({ mentor }) => {
       return null;
     }
   };
+
+  const getMeetingDateObj = () => {
+    if (!mentor.meetingDate || !mentor.meetingTime) return null;
+    const combined = mentor.meetingDate.includes('T')
+      ? new Date(mentor.meetingDate)
+      : new Date(`${mentor.meetingDate}T${mentor.meetingTime}`);
+    return isNaN(combined.getTime()) ? null : combined;
+  };
+
+  const meetingDateObj = getMeetingDateObj();
+  const oneHourAfter = meetingDateObj ? new Date(meetingDateObj.getTime() + 60 * 60 * 1000) : null;
+  const canJoin = meetingDateObj ? now >= meetingDateObj && (!oneHourAfter || now <= oneHourAfter) : false;
+  const isExpired = meetingDateObj ? now > oneHourAfter : false;
+  const meetingId =
+    mentor.meetingId || `${mentor.id}-${mentor.meetingDate || ''}-${mentor.meetingTime || ''}`;
 
   const getStatusBadge = () => {
     const status = mentor.status || 'pending';
@@ -104,12 +127,38 @@ const MentorCard = ({ mentor }) => {
                 {formatDateTime(mentor.meetingDate, mentor.meetingTime) || 
                  `${formatDate(mentor.meetingDate)} at ${mentor.meetingTime}`}
               </p>
+              {!isExpired ? (
+                <button
+                  onClick={() => {
+                    onJoin?.(meetingId, mentor.name);
+                  }}
+                  disabled={!canJoin}
+                  className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${
+                    canJoin
+                      ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
+                      : 'bg-slate-700 text-slate-300 cursor-not-allowed'
+                  }`}
+                >
+                  {canJoin ? 'Join Meeting' : 'Join available at meeting time'}
+                </button>
+              ) : (
+                <p className="mt-2 text-xs text-red-400 font-semibold">Meeting expired</p>
+              )}
             </div>
           )}
           {mentor.respondedAt && (
             <p className="text-xs text-slate-400 text-center">
               Responded on {formatDate(mentor.respondedAt)}
             </p>
+          )}
+          {(mentor.status === 'pending' || (mentor.status === 'accepted' && (!mentor.meetingDate || !mentor.meetingTime))) && (
+            <button
+              onClick={() => onRetract(mentor.id, mentor.meetingDate, mentor.meetingTime)}
+              disabled={retractingId === mentor.id}
+              className="mt-3 w-full text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 font-semibold transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {retractingId === mentor.id ? 'Retracting...' : 'Retract Request'}
+            </button>
           )}
         </div>
       </div>
@@ -122,6 +171,9 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [retractingId, setRetractingId] = useState(null);
+  const [showCall, setShowCall] = useState(false);
+  const [callMeetingId, setCallMeetingId] = useState(null);
 
   useEffect(() => {
     // Load user data from localStorage
@@ -175,6 +227,47 @@ const Page = () => {
 
     fetchAppliedMentors();
   }, []);
+
+  const handleRetract = async (mentorId, meetingDate, meetingTime) => {
+    const hasScheduled = meetingDate && meetingTime;
+    if (hasScheduled) {
+      alert('Cannot retract: meeting already scheduled.');
+      return;
+    }
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) {
+      alert('Please login to retract your request.');
+      return;
+    }
+
+    // find application id fallback
+    const target = mentors.find((m) => m.id === mentorId);
+    const applicationId = target?.applicationId || target?._id || mentorId;
+
+    setRetractingId(mentorId);
+    try {
+      const response = await fetch('/api/mentor-applications', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ mentorId, applicationId })
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'Failed to retract request.');
+      }
+
+      setMentors((prev) => prev.filter((m) => m.id !== mentorId));
+    } catch (err) {
+      alert(err.message || 'Failed to retract request.');
+    } finally {
+      setRetractingId(null);
+    }
+  };
 
   if (loading) return <FullPageLoader />;
   if (error) return <div className="text-red-500 p-6 text-center min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 flex items-center justify-center">{error}</div>;
@@ -240,11 +333,33 @@ const Page = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
             {mentors.map((m) => (
-              <MentorCard key={m.id} mentor={m} />
+              <MentorCard
+                key={m.id}
+                mentor={m}
+                onRetract={(id, date, time) => {
+                  if (retractingId === id) return;
+                  handleRetract(id, date, time);
+                }}
+                retractingId={retractingId}
+                onJoin={(meetingId, peerName) => {
+                  setCallMeetingId(meetingId);
+                  setShowCall(true);
+                }}
+              />
             ))}
           </div>
         )}
       </div>
+      {showCall && callMeetingId && (
+        <MeetingRoom
+          meetingId={callMeetingId}
+          displayName={user?.firstName || user?.Name || 'Student'}
+          onClose={() => {
+            setShowCall(false);
+            setCallMeetingId(null);
+          }}
+        />
+      )}
     </section>
   )
 }

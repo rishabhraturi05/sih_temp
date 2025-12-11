@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FullPageLoader from "../../components/loader";
+import MeetingRoom from "../../components/MeetingRoom";
 
-const StudentCard = ({ student, onStatusUpdate }) => {
+const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(student.status || 'pending');
   const [showScheduleModal, setShowScheduleModal] = useState(false);
@@ -13,6 +14,12 @@ const StudentCard = ({ student, onStatusUpdate }) => {
     date: student.meetingDate ? new Date(student.meetingDate).toISOString().split('T')[0] : null,
     time: student.meetingTime || null
   });
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60 * 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Update meeting info when student data changes
   useEffect(() => {
@@ -152,6 +159,15 @@ const StudentCard = ({ student, onStatusUpdate }) => {
     }
   };
 
+  const meetingDateObj = meetingInfo.date && meetingInfo.time
+    ? new Date(`${meetingInfo.date}T${meetingInfo.time}`)
+    : null;
+  const oneHourAfter = meetingDateObj ? new Date(meetingDateObj.getTime() + 60 * 60 * 1000) : null;
+  const canJoin = meetingDateObj ? now >= meetingDateObj && (!oneHourAfter || now <= oneHourAfter) : false;
+  const isExpired = meetingDateObj ? now > oneHourAfter : false;
+  const meetingId =
+    student.meetingId || `${student.id}-${meetingInfo.date || ''}-${meetingInfo.time || ''}`;
+
   const getStatusBadge = () => {
     switch (currentStatus) {
       case 'accepted':
@@ -240,6 +256,21 @@ const StudentCard = ({ student, onStatusUpdate }) => {
                   <p className="text-xs text-slate-300">
                     {formatDateTime(meetingInfo.date, meetingInfo.time)}
                   </p>
+                  {!isExpired ? (
+                    <button
+                      onClick={() => onJoin?.(meetingId, student.name)}
+                      disabled={!canJoin}
+                      className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${
+                        canJoin
+                          ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
+                          : 'bg-slate-700 text-slate-300 cursor-not-allowed'
+                      }`}
+                    >
+                      {canJoin ? 'Join Meeting' : 'Join available at meeting time'}
+                    </button>
+                  ) : (
+                    <p className="mt-2 text-xs text-red-400 font-semibold">Meeting expired</p>
+                  )}
                   <button
                     onClick={() => setShowScheduleModal(true)}
                     className="mt-2 text-xs text-[#F39C12] hover:text-[#d7890f] underline"
@@ -331,6 +362,8 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [showCall, setShowCall] = useState(false);
+  const [callMeetingId, setCallMeetingId] = useState(null);
 
   const handleStatusUpdate = (studentId, newStatus, meetingDate = null, meetingTime = null) => {
     setStudents(prevStudents =>
@@ -499,11 +532,25 @@ const Page = () => {
                 key={student.id} 
                 student={student} 
                 onStatusUpdate={handleStatusUpdate}
+                onJoin={(meetingId) => {
+                  setCallMeetingId(meetingId);
+                  setShowCall(true);
+                }}
               />
             ))}
           </div>
         )}
       </div>
+      {showCall && callMeetingId && (
+        <MeetingRoom
+          meetingId={callMeetingId}
+          displayName={user?.firstName || user?.Name || 'Mentor'}
+          onClose={() => {
+            setShowCall(false);
+            setCallMeetingId(null);
+          }}
+        />
+      )}
     </section>
   );
 };
