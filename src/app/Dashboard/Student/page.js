@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import FullPageLoader from '../../components/loader'
-import MeetingRoom from '../../components/MeetingRoom'
+import ZegoMeeting from '../../components/ZegoMeeting'
 
 const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
   const [now, setNow] = useState(() => new Date());
@@ -16,10 +16,10 @@ const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
     if (!dateString) return null;
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       });
     } catch {
       return null;
@@ -43,11 +43,11 @@ const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
       } else {
         return null;
       }
-      
+
       if (isNaN(date.getTime())) {
         return null;
       }
-      
+
       return date.toLocaleString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -124,8 +124,8 @@ const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
             <div className="mt-2 w-full text-center px-3 py-2 bg-green-400/10 rounded-lg border border-green-400/20">
               <p className="text-xs text-green-400 font-semibold mb-1">Meeting Scheduled</p>
               <p className="text-xs text-slate-300">
-                {formatDateTime(mentor.meetingDate, mentor.meetingTime) || 
-                 `${formatDate(mentor.meetingDate)} at ${mentor.meetingTime}`}
+                {formatDateTime(mentor.meetingDate, mentor.meetingTime) ||
+                  `${formatDate(mentor.meetingDate)} at ${mentor.meetingTime}`}
               </p>
               {!isExpired ? (
                 <button
@@ -133,11 +133,10 @@ const MentorCard = ({ mentor, onRetract, retractingId, onJoin }) => {
                     onJoin?.(meetingId, mentor.name);
                   }}
                   disabled={!canJoin}
-                  className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${
-                    canJoin
-                      ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
-                      : 'bg-slate-700 text-slate-300 cursor-not-allowed'
-                  }`}
+                  className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${canJoin
+                    ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
+                    : 'bg-slate-700 text-slate-300 cursor-not-allowed'
+                    }`}
                 >
                   {canJoin ? 'Join Meeting' : 'Join available at meeting time'}
                 </button>
@@ -194,7 +193,7 @@ const Page = () => {
     const fetchAppliedMentors = async () => {
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-        
+
         if (!token) {
           setError('Please login to view your applied mentors.');
           setLoading(false);
@@ -323,8 +322,8 @@ const Page = () => {
         {mentors.length === 0 ? (
           <div className="text-center text-slate-300 py-12">
             <p className="text-lg mb-4">You haven&apos;t applied to any mentors yet.</p>
-            <a 
-              href="/mentorships" 
+            <a
+              href="/mentorships"
               className="inline-block text-[#F39C12] hover:text-[#d7890f] underline underline-offset-4 font-semibold"
             >
               Browse available mentors →
@@ -341,8 +340,13 @@ const Page = () => {
                   handleRetract(id, date, time);
                 }}
                 retractingId={retractingId}
-                onJoin={(meetingId, peerName) => {
-                  setCallMeetingId(meetingId);
+                onJoin={(ignoredMeetingId, peerName) => {
+                  // Construct consistent ID: meeting_APPID_MENTORID
+                  // This matches the format used in Mentor Dashboard
+                  const consistentId = `meeting_${m.applicationId}_${m.id}`;
+                  const sanitizedId = consistentId.replace(/[^a-zA-Z0-9_]/g, '');
+                  console.log("Student joining with ID:", sanitizedId);
+                  setCallMeetingId(sanitizedId);
                   setShowCall(true);
                 }}
               />
@@ -350,17 +354,20 @@ const Page = () => {
           </div>
         )}
       </div>
-      {showCall && callMeetingId && (
-        <MeetingRoom
-          meetingId={callMeetingId}
-          displayName={user?.firstName || user?.Name || 'Student'}
-          onClose={() => {
-            setShowCall(false);
-            setCallMeetingId(null);
-          }}
-        />
-      )}
-    </section>
+      {
+        showCall && callMeetingId && (
+          <ZegoMeeting
+            meetingId={callMeetingId}
+            userName={user?.firstName || user?.Name || 'Student'}
+            userId={user?.id || user?._id || user?.email || `student-${Date.now()}`}
+            onClose={() => {
+              setShowCall(false);
+              setCallMeetingId(null);
+            }}
+          />
+        )
+      }
+    </section >
   )
 }
 

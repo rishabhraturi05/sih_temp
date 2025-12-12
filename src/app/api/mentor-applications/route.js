@@ -88,9 +88,9 @@ export async function POST(request) {
     await application.save();
 
     return NextResponse.json(
-      { 
+      {
         message: 'Mentor application added successfully',
-        application 
+        application
       },
       { status: 200 }
     );
@@ -137,6 +137,7 @@ export async function GET(request) {
 
       return {
         id: mentor._id,
+        applicationId: application._id,
         name: mentor.Name || '',
         title: mentor.Title || '',
         bio: mentor.Bio || '',

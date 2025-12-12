@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FullPageLoader from "../../components/loader";
-import MeetingRoom from "../../components/MeetingRoom";
+import ZegoMeeting from "../../components/ZegoMeeting";
 
 const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -36,10 +36,10 @@ const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
       });
     } catch {
       return 'N/A';
@@ -195,8 +195,8 @@ const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
   const today = new Date().toISOString().split('T')[0];
 
   return (<>
-      <div className="relative rounded-3xl overflow-hidden bg-slate-800/70 backdrop-blur-sm shadow-xl transition transform hover:-translate-y-1 hover:shadow-2xl">
-        <div className="flex flex-col items-center pt-8 px-5 pb-5">
+    <div className="relative rounded-3xl overflow-hidden bg-slate-800/70 backdrop-blur-sm shadow-xl transition transform hover:-translate-y-1 hover:shadow-2xl">
+      <div className="flex flex-col items-center pt-8 px-5 pb-5">
         <div className="relative w-28 h-28 -mt-2 flex items-center justify-center bg-[#F39C12]/20 rounded-full ring-4 ring-[#F39C12]/60">
           <svg
             className="w-16 h-16 text-[#F39C12]"
@@ -228,7 +228,7 @@ const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
             </p>
           )}
           {getStatusBadge()}
-          
+
           {currentStatus === 'pending' && (
             <div className="flex gap-2 mt-2 w-full">
               <button
@@ -260,11 +260,10 @@ const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
                     <button
                       onClick={() => onJoin?.(meetingId, student.name)}
                       disabled={!canJoin}
-                      className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${
-                        canJoin
-                          ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
-                          : 'bg-slate-700 text-slate-300 cursor-not-allowed'
-                      }`}
+                      className={`mt-2 w-full text-xs font-semibold rounded-lg px-3 py-2 transition shadow ${canJoin
+                        ? 'bg-[#F39C12] hover:bg-[#d7890f] text-white'
+                        : 'bg-slate-700 text-slate-300 cursor-not-allowed'
+                        }`}
                     >
                       {canJoin ? 'Join Meeting' : 'Join available at meeting time'}
                     </button>
@@ -288,72 +287,72 @@ const StudentCard = ({ student, onStatusUpdate, onJoin }) => {
               )}
             </>
           )}
-          
+
           {currentStatus !== 'pending' && student.respondedAt && (
             <p className="text-xs text-slate-400 text-center">
               Responded on {formatDate(student.respondedAt)}
             </p>
           )}
         </div>
+      </div>
+    </div>
+
+    {/* Schedule Meeting Modal */}
+    {showScheduleModal && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4">
+        <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-700">
+          <h3 className="text-xl font-bold text-white mb-4">Schedule Meeting with {student.name}</h3>
+          <form onSubmit={handleScheduleMeeting} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
+                Meeting Date
+              </label>
+              <input
+                type="date"
+                value={meetingDate}
+                onChange={(e) => setMeetingDate(e.target.value)}
+                min={today}
+                required
+                className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#F39C12]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
+                Meeting Time
+              </label>
+              <input
+                type="time"
+                value={meetingTime}
+                onChange={(e) => setMeetingTime(e.target.value)}
+                required
+                className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#F39C12]"
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowScheduleModal(false);
+                  setMeetingDate('');
+                  setMeetingTime('');
+                }}
+                className="flex-1 px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isScheduling}
+                className="flex-1 px-4 py-2 bg-[#F39C12] hover:bg-[#d7890f] text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isScheduling ? 'Scheduling...' : 'Schedule'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-
-      {/* Schedule Meeting Modal */}
-      {showScheduleModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4">
-          <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-700">
-            <h3 className="text-xl font-bold text-white mb-4">Schedule Meeting with {student.name}</h3>
-            <form onSubmit={handleScheduleMeeting} className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">
-                  Meeting Date
-                </label>
-                <input
-                  type="date"
-                  value={meetingDate}
-                  onChange={(e) => setMeetingDate(e.target.value)}
-                  min={today}
-                  required
-                  className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#F39C12]"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">
-                  Meeting Time
-                </label>
-                <input
-                  type="time"
-                  value={meetingTime}
-                  onChange={(e) => setMeetingTime(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#F39C12]"
-                />
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowScheduleModal(false);
-                    setMeetingDate('');
-                    setMeetingTime('');
-                  }}
-                  className="flex-1 px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg font-semibold transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isScheduling}
-                  className="flex-1 px-4 py-2 bg-[#F39C12] hover:bg-[#d7890f] text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isScheduling ? 'Scheduling...' : 'Schedule'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </>
+    )}
+  </>
   );
 };
 
@@ -369,13 +368,13 @@ const Page = () => {
     setStudents(prevStudents =>
       prevStudents.map(student =>
         student.id === studentId
-          ? { 
-              ...student, 
-              status: newStatus, 
-              respondedAt: new Date().toISOString(),
-              meetingDate: meetingDate || student.meetingDate,
-              meetingTime: meetingTime || student.meetingTime
-            }
+          ? {
+            ...student,
+            status: newStatus,
+            respondedAt: new Date().toISOString(),
+            meetingDate: meetingDate || student.meetingDate,
+            meetingTime: meetingTime || student.meetingTime
+          }
           : student
       )
     );
@@ -528,12 +527,19 @@ const Page = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
             {students.map((student) => (
-              <StudentCard 
-                key={student.id} 
-                student={student} 
+              <StudentCard
+                key={student.id}
+                student={student}
                 onStatusUpdate={handleStatusUpdate}
-                onJoin={(meetingId) => {
-                  setCallMeetingId(meetingId);
+                onJoin={(ignoredMeetingId) => {
+                  // Construct consistent ID: meeting_APPID_MENTORID
+                  // This matches the format used in Student Dashboard
+                  // NOTE: user.id might be user._id depending on auth provider, usually _id from Mongo
+                  const mentorId = user.id || user._id;
+                  const consistentId = `meeting_${student.applicationId}_${mentorId}`;
+                  const sanitizedId = consistentId.replace(/[^a-zA-Z0-9_]/g, '');
+                  console.log("Mentor joining with ID:", sanitizedId);
+                  setCallMeetingId(sanitizedId);
                   setShowCall(true);
                 }}
               />
@@ -542,9 +548,10 @@ const Page = () => {
         )}
       </div>
       {showCall && callMeetingId && (
-        <MeetingRoom
+        <ZegoMeeting
           meetingId={callMeetingId}
-          displayName={user?.firstName || user?.Name || 'Mentor'}
+          userName={user?.firstName || user?.Name || 'Mentor'}
+          userId={user?.id || user?._id || user?.email || `mentor-${Date.now()}`}
           onClose={() => {
             setShowCall(false);
             setCallMeetingId(null);

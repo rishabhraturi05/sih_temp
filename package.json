@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
     "@vercel/analytics": "^1.5.0",
+    "@zegocloud/zego-uikit-prebuilt": "^2.17.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.8.0",
     "dagre": "^0.8.5",
