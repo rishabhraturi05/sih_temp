@@ -68,15 +68,8 @@
 
 ### Media & Communication
 
-* **ZegoCloud / LiveKit** – video conferencing
+* **ZegoCloud** – video conferencing
 * **Cloudinary** – media storage
-
-### Dev & Tools
-
-* **Git & GitHub**
-* **Postman** – API testing
-* **dotenv** – environment variables
-
 ---
 
 ## 📂 Project Structure
